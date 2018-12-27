@@ -4,7 +4,8 @@
   "description": "shortest path on a graph",
   "main": "main.js",
   "scripts": {
-    "test": "mocha main.js"
+    "test": "mocha main.js",
+    "run" : "node main.js"
   },
   "repository": {
     "type": "git",
