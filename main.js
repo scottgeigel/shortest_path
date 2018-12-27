@@ -10,6 +10,11 @@ function getVertices(nodes, name, not_in = []) {
     for (let i = 0; i < length; ++i) {
         let node = nodes[i];
         
+        if ((node[3] == "y" && node[1] == name)) {
+            //shortcut to check bidirectional nodes... not the best way likely
+            let tempNode = [node[1], node[0], node[2], node[3]];
+            node = tempNode;
+        }
         if (node[0] == name) {
             let ok_to_push = true;
             //scan to see if we've already visited this node
@@ -167,13 +172,7 @@ if (isInTest) {
         return output;
     }
     var debugLog = (msg) => console.log(msg);
-    const graph = [
-        ['a', 'b', 5, 'n'],
-        ['b', 'c', 4, 'n'],
-        ['c', 'd', 8, 'n'],
-        ['e', 'f', 4, 'n'],
-    ];  
+    
     //sandbox code
-    debugLog(computeShortestDistance(graph,"a", "c"));
-    debugLog(computeShortestDistance(graph,"a", "f"));
+    debugLog(computeShortestDistance(graph,"g", "h"));
 }
