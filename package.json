@@ -1,0 +1,19 @@
+{
+  "name": "shortest_path",
+  "version": "1.0.0",
+  "description": "shortest path on a graph",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scottgeigel/shortest_path.git"
+  },
+  "author": "Scott Geigel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/scottgeigel/shortest_path/issues"
+  },
+  "homepage": "https://github.com/scottgeigel/shortest_path#readme"
+}
