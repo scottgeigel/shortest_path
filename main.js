@@ -1,57 +1,9 @@
-/*
-//grave yard
-
-function computeShortestDistance(g, a, b) {
-    let shortest_distance = Infinity;
-    let path = [findNode(a)];
-    let to_visit = [getVertices(g, a)];
-    
-    console.log("visiting " + toVisit);
-    while (to_visit.length > 0)
-    {
-        path.
-    }
-    for (let i = 0; i < toVisit.length; i++) {
-        let nextNode = toVisit.pop();
-        console.log("examining " + nextNode);
-        path.push(nextNode);
-        if (nextNode[0] == b) {
-            console.log("encountered " + b);
-            //computer the distance in the path
-            let distance = 0;
-            path.forEach(element => {
-                distance += element;
-            });
-            console.log("distance is " + distance);
-            if (distance < shortest_distance) {
-                shortest_distance = distance;
-            } 
-            path.pop();
-        } else {
-            console.log(nextNode[0] + "!=" + b);
-        }
-    }
-    return shortest_distance;
-}
-*/
-function debugFormatCurrentPath(path) {
-    let output = "";
-    for (let i = 0; i < path.length; i++) {
-        let node = path[i];
-        output += "\t" + node[0] + "--(" + node[2] + ")-->" + node[1] + "\n";
-    }
-    return output;
-}
-function findNode(nodes, name) {
-    let length = nodes.length;
-    for(let i = 0; i < length; ++i) {
-        let node = nodes[i];
-        if (node[0] == name) {
-            return node;
-        }
-    }
-    return null;
-}
+/**
+ * 
+ * @param {array} nodes pool of nodes to search
+ * @param {String} name name of origin node
+ * @param {array} not_in array of previously visited nodes {source, destination, distance, isBidirection}
+ */
 function getVertices(nodes, name, not_in = []) {
     let vertices = [];
     let length = nodes.length;
@@ -65,7 +17,7 @@ function getVertices(nodes, name, not_in = []) {
                 if (node[1] == not_in[j][0]) {
                     //this is already in the path
                     ok_to_push = false;
-                    console.log("excluding vertice " + node);
+                    debugLog("excluding vertice " + node);
                     break;
                 }
             }
@@ -85,14 +37,14 @@ function getVertices(nodes, name, not_in = []) {
  * @param {string} destination  node name of destination node
  */
 function recursive_solution(nodes, path, next, destination) {
-    console.log("recursive_solution: " + next + "->" + destination);
+    debugLog("recursive_solution: " + next + "->" + destination);
     if (next == destination) {
         //sum up the path
         let sum = 0;
         for (let i = 0; i < path.length; i++) {
             sum += path[i][2];
         }
-        console.log('sum is ' + sum);
+        debugLog('sum is ' + sum);
         return sum;
     } else {
         let vertices = getVertices(nodes, next, path);
@@ -102,8 +54,8 @@ function recursive_solution(nodes, path, next, destination) {
             path.push(next_node);
             let distance = recursive_solution(nodes, path, next_node[1], destination);
             if (distance < smallest_sum) {
-                console.log ("distance of " + distance + " beat current record of " + smallest_sum);
-                console.log ("path is [\n" + debugFormatCurrentPath(path) + "\n]");
+                debugLog ("distance of " + distance + " beat current record of " + smallest_sum);
+                debugLog ("path is [\n" + debugFormatCurrentPath(path) + "\n]");
                 smallest_sum = distance;
             }
             path.pop();
@@ -122,11 +74,8 @@ function recursive_solution(nodes, path, next, destination) {
 */
 function computeShortestDistance(g, a, b) {
     let solution = recursive_solution(g, [], a, b);
-    if (solution == Infinity) {
-        return -9999;
-    } else {
-        return solution;
-    }
+    
+    return solution;
 }
 
 // Sample Data
@@ -165,6 +114,9 @@ const graph = [
 
 var isInTest = typeof global.it === 'function';
 if (isInTest) {
+    var debugFormatCurrentPath = (path) => {};
+    var debugLog = (msg) => {};
+
     var assert = require('assert');
 
     // Sample Unit Test for the above data
@@ -206,6 +158,15 @@ if (isInTest) {
         });
     });
 } else {
+    function debugFormatCurrentPath(path) {
+        let output = "";
+        for (let i = 0; i < path.length; i++) {
+            let node = path[i];
+            output += "\t" + node[0] + "--(" + node[2] + ")-->" + node[1] + "\n";
+        }
+        return output;
+    }
+    var debugLog = (msg) => console.log(msg);
     const graph = [
         ['a', 'b', 5, 'n'],
         ['b', 'c', 4, 'n'],
@@ -213,6 +174,6 @@ if (isInTest) {
         ['e', 'f', 4, 'n'],
     ];  
     //sandbox code
-    console.log(computeShortestDistance(graph,"a", "c"));
-    console.log(computeShortestDistance(graph,"a", "f"));
+    debugLog(computeShortestDistance(graph,"a", "c"));
+    debugLog(computeShortestDistance(graph,"a", "f"));
 }
