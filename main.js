@@ -1,4 +1,47 @@
+/*
+//grave yard
 
+function computeShortestDistance(g, a, b) {
+    let shortest_distance = Infinity;
+    let path = [findNode(a)];
+    let to_visit = [getVertices(g, a)];
+    
+    console.log("visiting " + toVisit);
+    while (to_visit.length > 0)
+    {
+        path.
+    }
+    for (let i = 0; i < toVisit.length; i++) {
+        let nextNode = toVisit.pop();
+        console.log("examining " + nextNode);
+        path.push(nextNode);
+        if (nextNode[0] == b) {
+            console.log("encountered " + b);
+            //computer the distance in the path
+            let distance = 0;
+            path.forEach(element => {
+                distance += element;
+            });
+            console.log("distance is " + distance);
+            if (distance < shortest_distance) {
+                shortest_distance = distance;
+            } 
+            path.pop();
+        } else {
+            console.log(nextNode[0] + "!=" + b);
+        }
+    }
+    return shortest_distance;
+}
+*/
+function debugFormatCurrentPath(path) {
+    let output = "";
+    for (let i = 0; i < path.length; i++) {
+        let node = path[i];
+        output += "\t" + node[0] + "--(" + node[2] + ")-->" + node[1] + "\n";
+    }
+    return output;
+}
 function findNode(nodes, name) {
     let length = nodes.length;
     for(let i = 0; i < length; ++i) {
@@ -8,6 +51,65 @@ function findNode(nodes, name) {
         }
     }
     return null;
+}
+function getVertices(nodes, name, not_in = []) {
+    let vertices = [];
+    let length = nodes.length;
+    for (let i = 0; i < length; ++i) {
+        let node = nodes[i];
+        
+        if (node[0] == name) {
+            let ok_to_push = true;
+            //scan to see if we've already visited this node
+            for (let j = 0; j < not_in.length; j++) {
+                if (node[1] == not_in[j][0]) {
+                    //this is already in the path
+                    ok_to_push = false;
+                    console.log("excluding vertice " + node);
+                    break;
+                }
+            }
+            if (ok_to_push) {
+                vertices.push(node);
+            }
+        }
+    }
+    return vertices;
+}
+
+/**
+ * 
+ * @param {array} nodes array of objects {source, destination, distance, isBidirection}
+ * @param {array} path array of objects {source, destination, distance, isBidirection}
+ * @param {String} next node name that we're searching from
+ * @param {string} destination  node name of destination node
+ */
+function recursive_solution(nodes, path, next, destination) {
+    console.log("recursive_solution: " + next + "->" + destination);
+    if (next == destination) {
+        //sum up the path
+        let sum = 0;
+        for (let i = 0; i < path.length; i++) {
+            sum += path[i][2];
+        }
+        console.log('sum is ' + sum);
+        return sum;
+    } else {
+        let vertices = getVertices(nodes, next, path);
+        let smallest_sum = Infinity;
+        for (let i = 0; i < vertices.length; i++) {
+            let next_node = vertices[i];
+            path.push(next_node);
+            let distance = recursive_solution(nodes, path, next_node[1], destination);
+            if (distance < smallest_sum) {
+                console.log ("distance of " + distance + " beat current record of " + smallest_sum);
+                console.log ("path is [\n" + debugFormatCurrentPath(path) + "\n]");
+                smallest_sum = distance;
+            }
+            path.pop();
+        }
+        return smallest_sum;
+    }
 }
 /**
 * Find the shortest distance between point a and point b in the graph g.
@@ -19,8 +121,12 @@ function findNode(nodes, name) {
 *
 */
 function computeShortestDistance(g, a, b) {
-    let current_node = findNode(g, a);
-    return current_node;
+    let solution = recursive_solution(g, [], a, b);
+    if (solution == Infinity) {
+        return -9999;
+    } else {
+        return solution;
+    }
 }
 
 // Sample Data
@@ -100,6 +206,13 @@ if (isInTest) {
         });
     });
 } else {
+    const graph = [
+        ['a', 'b', 5, 'n'],
+        ['b', 'c', 4, 'n'],
+        ['c', 'd', 8, 'n'],
+        ['e', 'f', 4, 'n'],
+    ];  
     //sandbox code
-    console.log(computeShortestDistance(graph,"a", "g"));
+    console.log(computeShortestDistance(graph,"a", "c"));
+    console.log(computeShortestDistance(graph,"a", "f"));
 }
